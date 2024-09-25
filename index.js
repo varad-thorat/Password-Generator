@@ -6,6 +6,7 @@ const app = express();
 const route = require('./routes/router');
 const bodyparser = require('body-parser');
 const hbs = require('hbs')
+const bcrypt = require('bcrypt');
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));

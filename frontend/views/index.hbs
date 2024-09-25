@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Generator</title>
     <script src="../public/scripts.js"></script>
-    {{!-- <link rel="stylesheet" href="../public/style.css"> --}}
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
@@ -42,7 +41,6 @@
         </ul>
       </div>
     </nav>
-    <!-- <input type="number" id="length" placeholder="Enter length"> -->
     <input type="range" id="length" min="10" max="15" value="12">
     <button type="button" onclick="generateAndDisplayPassword()">Submit</button>
     <br>
@@ -58,20 +56,78 @@
     <input type="text" id="generatedPassword" readonly>
     <button type="button" onclick="savePassword()">Save Password</button>
     <br><br>
-    <div id="user-list">
+    <button id="google-login" class="btn btn-primary">Login with Google</button>
+    <br><br>
+    {{!-- <div id="user-list">
         <h2>All Users</h2>
         <ul id="users"></ul>
-    </div>
+    </div> --}}
     
+    <!-- Table to display saved passwords -->
+    <h2 id="table-title">Saved Passwords</h2>
+    <div id="password-table-container" style="display: none;">
+    {{!-- <h2>Saved Passwords</h2> --}}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Title</th>
+                <th scope="col">Password</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody id="password-table-body">
+            <!-- Password rows will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+    
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+      import { getAuth, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBS5Ko6NnBrhtFo61IsUckbVlUcymVdvZI",
+        authDomain: "jwt-token-af81a.firebaseapp.com",
+        projectId: "jwt-token-af81a",
+        storageBucket: "jwt-token-af81a.appspot.com",
+        messagingSenderId: "679384134524",
+        appId: "1:679384134524:web:660046716887502aefaaf9"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
+      document.getElementById('google-login').addEventListener('click', () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            const user = result.user;
+            console.log('User signed in:', user);
+            // Redirect or update UI based on user information
+          })
+          .catch((error) => {
+            console.error('Error during Google Sign-In:', error);
+          });
+      });
+    </script>
+
     <script>
-        const slider = document.getElementById("length")
-        const output = document.getElementById("slider-output")
+        const slider = document.getElementById("length");
+        const output = document.getElementById("slider-output");
         output.textContent = slider.value;
 
-        slider.oninput = function(){
+        slider.oninput = function() {
             output.innerHTML = this.value;
         }
     </script>
+
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
