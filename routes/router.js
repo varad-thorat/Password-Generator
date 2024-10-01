@@ -19,20 +19,35 @@ router.get("/",(req,res) => {
 
 
 //saving password generated from user
-router.post('/savePassword', (req, res) => {
-    const { title, password } = req.body;
-
+router.post('/savePassword', usercontroller.verifyToken, (req, res) => {
+    const {title, password } = req.body;
+    const f_id = req.user.id;
+    console.log(req.user.id)
     if (!title || !password) {
         return res.status(400).json({ success: false, message: 'Title and password are required' });
     }
 
-    const query = 'INSERT INTO passwords (title, pass) VALUES (?, ?)';
-    db.query(query, [title, password], (err, results) => {
+    const query1 = 'SELECT * FROM passwords WHERE title = ?'
+    const query2 = 'INSERT INTO passwords (id, title, pass) VALUES (?, ?, ?)';
+    db.query(query1,[title], (err,results)=>{
+        if (err) throw err;
+        if(results.length == 0){
+            connection.query(query2,[f_id,title,password],(err,results)=>{
+                if(err) throw err;
+                console.log('title inserted');
+            });
+        }else{
+            console.log('title already exists!')
+        }
+
+    })
+    
+    db.query(query1, [f_id, title, password], (err, results) => {
         if (err) {
             console.error('Database error:', err.message, 'Stack trace:', err.stack);
             return res.status(500).json({ success: false, message: 'Failed to save password' });
         }
-        res.json({ success: true });
+        return res.json({ success: true });
     });
 });
 
@@ -40,9 +55,10 @@ router.post('/savePassword', (req, res) => {
 
 
 //displaying generated passwords to home page
-router.get('/get-passwords', (req, res) => {
-    const query = 'SELECT id, title, pass FROM passwords';
-    db.query(query, (err, results) => {
+router.get('/get-passwords', usercontroller.verifyToken, (req, res) => {
+    const id = req.user.id;
+    const query = 'SELECT p_id, title, pass FROM passwords where id = ?';
+    db.query(query, id , (err, results) => {
         if (err) {
             console.error('Database error:', err);
             return res.status(500).json({ success: false, message: 'Failed to fetch passwords' });
@@ -51,7 +67,7 @@ router.get('/get-passwords', (req, res) => {
     });
 });
 
-router.post('/edit-passwords', (req, res) => {
+router.post('/edit-passwords', usercontroller.verifyToken,  (req, res) => {
     const id = req.body.id; 
     const title = req.body.title;
     // console.log("id : ",id , "title : ",title)
@@ -76,10 +92,12 @@ router.post('/edit-passwords', (req, res) => {
     });
 });
 
-router.delete('/delete-passwords/:id',(req,res)=>{
-    const id = req.params.id;
-    const query = 'DELETE FROM passwords WHERE id = ?';
-    db.query(query,[id],(err,results)=>{
+router.delete('/delete-passwords', usercontroller.verifyToken, (req,res)=>{
+    // console.log(req.body.id)
+    const p_id = req.body.p_id;
+    console.log(p_id)
+    const query = 'DELETE FROM passwords WHERE p_id = ?';
+    db.query(query,[p_id],(err,results)=>{
         if(err){
             console.error('Delete error:',err);
             return res.status(500).json({success:false, message:'Failed to delete password'})
@@ -123,5 +141,7 @@ router.get("/login",(req,res) => {
 router.post("/registeruser",usercontroller.register)
 
 router.post("/loginuser",usercontroller.authenticate)
+
+router.get('/logout', usercontroller.verifyToken,usercontroller.logout)
 
 module.exports = router

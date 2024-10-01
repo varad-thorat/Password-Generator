@@ -1,231 +1,54 @@
-// // This function generates a password
-// function pass() {
-//     const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//     const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
-//     const numbers = '0123456789';
-//     const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-//     const allCharacters = upperCase + lowerCase + numbers + specialChars;
-//     const notAllCharacters = upperCase + lowerCase + numbers;
-//     const passLength = parseInt(document.getElementById('length').value, 10);
+// Constants for character sets
+const UPPER_CASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const LOWER_CASE = 'abcdefghijklmnopqrstuvwxyz';
+const NUMBERS = '0123456789';
+const SPECIAL_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
-//     if (isNaN(passLength) || passLength <= 0) {
-//         alert('Please enter a valid length.');
-//         return;
-//     }
-
-//     let password = "";
-//     const specChar = document.querySelector('input[name="specialChar"]:checked').value === 'yes';
-
-//     if (specChar) {
-//         for (let i = 0; i < passLength; i++) {
-//             const randomIndex = Math.floor(Math.random() * allCharacters.length);
-//             password += allCharacters[randomIndex];
-//         }
-//         // Ensure at least one special character
-//         if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-//             const replaceIndex = Math.floor(Math.random() * passLength);
-//             password = password.substring(0, replaceIndex) +
-//                        specialChars[Math.floor(Math.random() * specialChars.length)] +
-//                        password.substring(replaceIndex + 1);
-//         }
-//     } else {
-//         for (let i = 0; i < passLength; i++) {
-//             const randomIndex = Math.floor(Math.random() * notAllCharacters.length);
-//             password += notAllCharacters[randomIndex];
-//         }
-//     }
-
-//     return password;
-// }
-
-// // This function generates and displays the password
-// function generateAndDisplayPassword() {
-//     const password = pass();
-//     document.getElementById('generatedPassword').value = password;
-// }
-
-
-
-
-// // This function saves the password to the backend
-// async function savePassword() {
-//     const password = document.getElementById('generatedPassword').value;
-//     if (!password) {
-//         alert('Please generate a password first!');
-//         return;
-//     }
-
-//     const title = prompt('Enter a title for this password (e.g., Facebook, Gmail):');
-//     if (!title) {
-//         alert('Title cannot be empty!');
-//         return;
-//     }
-
-//     try {
-//         const response = await fetch('http://localhost:8080/save-password', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ title: title, password: password })
-//         });
-
-//         const data = await response.json();
-
-//         if (data.success) {
-//             alert('Password saved successfully!');
-//             fetchPasswords(); // Refresh the password list after saving
-//         } else {
-//             alert('Failed to save password.');
-//         }
-//     } catch (error) {
-//         console.error('Error saving password:', error);
-//     }
-// }
-
-
-
-// async function register(name,email,password){
-//     try {
-//         const response = await fetch('http://localhost:8080/registeruser', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ name: name, email:email, password: password })
-//         });
-        
-//         // fetchUsers(); // Refresh the user list after deletion
-        
-//     } catch (error) {
-//         console.error('Error deleting user:', error);
-//     }
-// }
-
-// async function authenticate(email,password){
-//     try {
-//         const response = await fetch('http://localhost:8080/loginuser', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({email:email, password: password })
-//         });
-        
-//         // fetchUsers(); // Refresh the user list after deletion
-        
-//     } catch (error) {
-//         console.error('Error deleting user:', error);
-//     }
-// }
-
-
-// async function fetchPasswords() {
-//     try {
-//         const response = await fetch('http://localhost:8080/get-passwords', {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             }
-//         });
-
-//         const data = await response.json();
-
-//         if (data.success) {
-//             const passwords = data.passwords;
-//             const tableContainer = document.getElementById('password-table-container');
-//             const tableBody = document.getElementById('password-table-body');
-
-//             // Clear existing table content
-//             tableBody.innerHTML = '';
-
-//             if (passwords.length > 0) {
-//                 // Show the table container if passwords are available
-//                 tableContainer.style.display = 'block';
-
-//                 passwords.forEach((passwordObj) => {
-//                     const row = document.createElement('tr');
-
-//                     // Create the title cell
-//                     const titleCell = document.createElement('td');
-//                     const titleInput = document.createElement('input');
-//                     titleInput.type = 'text';
-//                     titleInput.value = passwordObj.title;
-//                     titleCell.appendChild(titleInput);
-//                     row.appendChild(titleCell);
-
-//                     // Create the password cell
-//                     const passwordCell = document.createElement('td');
-//                     passwordCell.textContent = passwordObj.password;
-//                     row.appendChild(passwordCell);
-
-//                     tableBody.appendChild(row);
-//                 });
-//             } else {
-//                 // Hide the table if no passwords are available
-//                 tableContainer.style.display = 'none';
-//             }
-//         } else {
-//             console.error('Failed to fetch passwords');
-//         }
-//     } catch (error) {
-//         console.error('Error fetching passwords:', error);
-//     }
-// }
-
-// // Call fetchPasswords on page load
-// window.onload = fetchPasswords;
-
-// This function generates a password
-function pass() {
-    const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
-    const numbers = '0123456789';
-    const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    const allCharacters = upperCase + lowerCase + numbers + specialChars;
-    const notAllCharacters = upperCase + lowerCase + numbers;
+/**
+ * Generates a password based on user specifications.
+ * @returns {string|null} The generated password or null if input is invalid.
+ */
+function generatePassword() {
     const passLength = parseInt(document.getElementById('length').value, 10);
+    const includeSpecialChars = document.querySelector('input[name="specialChar"]:checked').value === 'yes';
 
     if (isNaN(passLength) || passLength <= 0) {
         alert('Please enter a valid length.');
-        return;
+        return null;
     }
 
-    let password = "";
-    const specChar = document.querySelector('input[name="specialChar"]:checked').value === 'yes';
+    const allCharacters = UPPER_CASE + LOWER_CASE + NUMBERS + (includeSpecialChars ? SPECIAL_CHARS : '');
+    let password = Array.from({length: passLength}, () => allCharacters[Math.floor(Math.random() * allCharacters.length)]).join('');
 
-    if (specChar) {
-        for (let i = 0; i < passLength; i++) {
-            const randomIndex = Math.floor(Math.random() * allCharacters.length);
-            password += allCharacters[randomIndex];
-        }
-        // Ensure at least one special character
-        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-            const replaceIndex = Math.floor(Math.random() * passLength);
-            password = password.substring(0, replaceIndex) +
-                       specialChars[Math.floor(Math.random() * specialChars.length)] +
-                       password.substring(replaceIndex + 1);
-        }
-    } else {
-        for (let i = 0; i < passLength; i++) {
-            const randomIndex = Math.floor(Math.random() * notAllCharacters.length);
-            password += notAllCharacters[randomIndex];
-        }
+    // Ensure at least one special character if specified
+    if (includeSpecialChars && !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+        const replaceIndex = Math.floor(Math.random() * passLength);
+        password = password.substring(0, replaceIndex) +
+                   SPECIAL_CHARS[Math.floor(Math.random() * SPECIAL_CHARS.length)] +
+                   password.substring(replaceIndex + 1);
     }
 
     return password;
 }
 
-// This function generates and displays the password
+/**
+ * Generates and displays the password.
+ */
 function generateAndDisplayPassword() {
-    const password = pass();
+    const password = generatePassword();
     if (password) {
         document.getElementById('generatedPassword').value = password;
     }
 }
 
-// This function saves the password to the backend
+/**
+ * Saves the generated password to the backend.
+ * @returns {Promise<void>}
+ */
 async function savePassword() {
+    
+    // const cookie = document.cookie;
+    // console.log(cookie)
     const password = document.getElementById('generatedPassword').value;
     if (!password) {
         alert('Please generate a password first!');
@@ -241,17 +64,16 @@ async function savePassword() {
     try {
         const response = await fetch('http://localhost:8080/savePassword', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ title: title, password: password })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, password }),
+            credentials: 'include'
         });
 
         const data = await response.json();
 
         if (data.success) {
             alert('Password saved successfully!');
-            fetchPasswords(); // Refresh the password list after saving
+            fetchPasswords();
         } else {
             alert('Failed to save password.');
         }
@@ -260,202 +82,246 @@ async function savePassword() {
     }
 }
 
-// This function registers a new user
-async function register(name, email, password) {
+/**
+ * Registers a new user.
+ * @param {string} name - User's name
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {Promise<void>}
+ */
+async function registerUser(name, email, password) {
     try {
         const response = await fetch('http://localhost:8080/registeruser', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: name, email: email, password: password })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
         });
 
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success === "true") {
             alert('User registered successfully!');
-            // Optional: refresh user list or redirect
+            // Redirect to login page or automatically log in the user
         } else {
-            alert('Failed to register user.');
+            alert(`Failed to register user: ${data.message}`);
         }
     } catch (error) {
         console.error('Error registering user:', error);
+        alert('An error occurred during registration. Please try again.');
     }
 }
 
-// This function authenticates a user
-async function authenticate(email, password) {
+/**
+ * Authenticates a user.
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {Promise<void>}
+ */
+async function authenticateUser(email, password) {
     try {
         const response = await fetch('http://localhost:8080/loginuser', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: email, password: password })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
         });
 
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success === "true") {
             alert('Login successful!');
-            // Optional: redirect to a different page after login
+            // Implement post-login logic (e.g., redirect to dashboard)
+            window.location.href = '/dashboard';  // Adjust the URL as needed
         } else {
-            alert('Login failed.');
+            alert(`Login failed: ${data.message}`);
         }
     } catch (error) {
         console.error('Error logging in user:', error);
+        alert('An error occurred during login. Please try again.');
     }
 }
-// This function deletes the passwords
-async function deletePasswords(id){
-    try{
-        const response = await fetch('http://localhost:8080/delete-passwords',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: id})
+
+async function logoutUser() {
+    try {
+        const response = await fetch('http://localhost:8080/logout', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
         });
+
         const data = await response.json();
 
         if (data.success) {
-            alert('Deleted successfully!');
-            fetchPasswords(); // Refresh the password list after saving
+            alert('Logout successful!');
+            // Redirect to login page
+            window.location.href = '/login';  // Adjust the URL as needed
         } else {
-            alert('Failed to save password.');
+            alert('Logout failed.');
         }
     } catch (error) {
-        console.error('Error saving password:', error);
+        console.error('Error logging out user:', error);
+        alert('An error occurred during logout. Please try again.');
     }
 }
 
-
-// This function fetches and displays the stored passwords
-async function fetchPasswords() {
+/**
+ * Fetches and displays stored passwords.
+ * @returns {Promise<void>}
+ */
+async function fetchPasswords(id) {
     try {
         const response = await fetch('http://localhost:8080/get-passwords', {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            // body: JSON.stringify({})
         });
 
         const data = await response.json();
-
+        console.log(data)
         if (data.success) {
-            const passwords = data.passwords;
-            const tableContainer = document.getElementById('password-table-container');
-            const tableBody = document.getElementById('password-table-body');
-
-            // Clear existing table content
-            tableBody.innerHTML = '';
-
-            if (passwords.length > 0) {
-                // Show the table container if passwords are available
-                tableContainer.style.display = 'block';
-
-                passwords.forEach((passwordObj,idx) => {
-                    const row = document.createElement('tr');
-                    console.log(passwordObj)
-                    // Create the title cell
-                    
-
-                    const idCell = document.createElement('td');
-                    idCell.textContent = idx + 1
-                    // for(let i = 0; i<pass)
-                    row.appendChild(idCell);
-                    
-                    const titleCell = document.createElement('td');
-                    titleCell.textContent = passwordObj.title
-                    row.appendChild(titleCell);
-
-                    // Create the password cell
-                    const passwordCell = document.createElement('td');
-                    passwordCell.textContent = passwordObj.pass;
-                    row.appendChild(passwordCell);
-                    
-                    const editCell = document.createElement('td');
-                    const editButton = document.createElement('button');
-                    editButton.textContent = 'Edit';
-                    editButton.addEventListener('click',async()=>{
-                        await editPassword(passwordObj.id)
-                        fetchPasswords();
-                    })
-                    editCell.appendChild(editButton);
-                    row.appendChild(editCell);
-
-                    const deleteCell = document.createElement('td');
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.addEventListener('click', async () => {
-
-                        await deletePassword(passwordObj.id);
-                        // Refresh the table after deletion
-                        fetchPasswords();
-                    });
-                    deleteCell.appendChild(deleteButton);
-                    row.appendChild(deleteCell);
-
-                    tableBody.appendChild(row);
-                });
-            } else {
-                // Hide the table if no passwords are available
-                tableContainer.style.display = 'none';
-            }
+            displayPasswords(data.passwords);
+            // savePassword(data.passwords);
         } else {
             console.error('Failed to fetch passwords');
+            alert('Failed to fetch passwords. Please try again.');
         }
     } catch (error) {
         console.error('Error fetching passwords:', error);
+        alert('An error occurred while fetching passwords. Please try again.');
     }
 }
 
-async function editPassword(id) {
+/**
+ * Displays passwords in a table format.
+ * @param {Array} passwords - Array of password objects
+ */
+function displayPasswords(passwords) {
+    const tableContainer = document.getElementById('password-table-container');
+    const tableBody = document.getElementById('password-table-body');
+
+    tableBody.innerHTML = '';
+
+    if (passwords.length > 0) {
+        tableContainer.style.display = 'block';
+
+        passwords.forEach((passwordObj, idx) => {
+            console.log(passwordObj)
+            const row = createPasswordRow(passwordObj, idx);
+            tableBody.appendChild(row);
+        });
+    } else {
+        tableContainer.style.display = 'none';
+    }
+}
+
+/**
+ * Creates a table row for a password entry.
+ * @param {Object} passwordObj - Password object
+ * @param {number} idx - Index of the password
+ * @returns {HTMLTableRowElement}
+ */
+function createPasswordRow(passwordObj, idx) {
+    const row = document.createElement('tr');
+
+    const cells = [
+        { content: String(idx + 1) },
+        { content: passwordObj.title },
+        { content: passwordObj.pass },
+        { content: 'Edit', onClick: () => editPassword(passwordObj.p_id) },
+        { content: 'Delete', onClick: () => deletePassword(passwordObj.p_id) }
+    ];
+
+    cells.forEach(cell => {
+        const td = document.createElement('td');
+        if (typeof cell.content === 'string') {
+            if (cell.content === 'Edit' || cell.content === 'Delete') {
+                const button = document.createElement('button');
+                button.textContent = cell.content;
+                button.addEventListener('click', cell.onClick);
+                td.appendChild(button);
+            } else {
+                td.textContent = cell.content;
+            }
+        } else if (cell.content instanceof Node) {
+            td.appendChild(cell.content);
+        }
+        row.appendChild(td);
+    });
+
+    return row;
+}
+
+/**
+ * Edits a password entry.
+ * @param {number} id - Password ID
+ * @returns {Promise<void>}
+ */
+async function editPassword(p_id) {
     const newTitle = prompt("Enter the new title:");
     if (!newTitle || newTitle.trim() === '') {
         alert('Title should not be empty');
         return;
     }
 
-    // console.log({id: id, title: newTitle.trim()})
-
-    try{
+    try {
         const response = await fetch(`http://localhost:8080/edit-passwords`, {
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body : JSON.stringify({id: id, title: newTitle.trim()})
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p_id, title: newTitle.trim() }),
+            credentials: 'include'
         });
-    console.log("hello")
+
         const data = await response.json();
-        if (!data.success){
-            console.error('Failed to edit password')
+        if (!data.success) {
+            console.error('Failed to edit password');
+            alert('Failed to edit password. Please try again.');
+        } else {
+            fetchPasswords();
         }
-    }catch(error){
-        console.error("Error deleting password: ", error);
+    } catch (error) {
+        console.error("Error editing password: ", error);
+        alert('An error occurred while editing the password. Please try again.');
     }
 }
 
-async function deletePassword(id) {
+/**
+ * Deletes a password entry.
+ * @param {number} id - Password ID
+ * @returns {Promise<void>}
+ */
+async function deletePassword(p_id) {
+    console.log(p_id)
+    const isConfirmed = confirm("Are you sure you want to delete this password?");
+    // console.log(id)
+    if(!isConfirmed) {
+        return;
+    }
+
     try {
-        const response = await fetch(`http://localhost:8080/delete-passwords/${id}`, {
+        console.log(p_id)
+        const response = await fetch(`http://localhost:8080/delete-passwords/`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ p_id })
         });
 
         const data = await response.json();
+        // console.log(data)
 
         if (!data.success) {
             console.error('Failed to delete password');
+            alert('Failed to delete password. Please try again.');
+        } else {
+            // alert("password deleted!")
+            fetchPasswords();
         }
     } catch (error) {
         console.error('Error deleting password:', error);
+        alert('An error occurred while deleting the password. Please try again.');
     }
 }
 
-// Call fetchPasswords on page load
+// Initialize the application
 window.onload = fetchPasswords;

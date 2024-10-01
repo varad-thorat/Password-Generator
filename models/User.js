@@ -110,9 +110,11 @@ class UserModel {
             email: user.email,
             name: user.u_name
         };
+        console.log(process.env.JWT_SECRET)
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         return token;
     }
+    
 
 }
 

@@ -7,7 +7,10 @@ const route = require('./routes/router');
 const bodyparser = require('body-parser');
 const hbs = require('hbs')
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
+app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.set('view engine', 'hbs')
