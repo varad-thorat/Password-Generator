@@ -215,6 +215,11 @@ function displayPasswords(passwords) {
     }
 }
 
+function forgetPass(){
+    
+}
+
+
 /**
  * Creates a table row for a password entry.
  * @param {Object} passwordObj - Password object

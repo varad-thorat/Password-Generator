@@ -32,7 +32,8 @@ router.post('/savePassword', usercontroller.verifyToken, (req, res) => {
     db.query(query1,[title], (err,results)=>{
         if (err) throw err;
         if(results.length == 0){
-            connection.query(query2,[f_id,title,password],(err,results)=>{
+            console.log(f_id);
+            db.query(query2,[f_id,title,password],(err,results)=>{
                 if(err) throw err;
                 console.log('title inserted');
             });
@@ -68,7 +69,8 @@ router.get('/get-passwords', usercontroller.verifyToken, (req, res) => {
 });
 
 router.post('/edit-passwords', usercontroller.verifyToken,  (req, res) => {
-    const id = req.body.id; 
+    const id = req.body.p_id; 
+    console.log(id)
     const title = req.body.title;
     // console.log("id : ",id , "title : ",title)
     // Query to check if the title already exists
@@ -82,7 +84,7 @@ router.post('/edit-passwords', usercontroller.verifyToken,  (req, res) => {
         }
 
         // If no error, proceed to update the title
-        const updateQuery = 'UPDATE passwords SET title = ? WHERE id = ?';  // Replace with your actual condition to identify the record
+        const updateQuery = 'UPDATE passwords SET title = ? WHERE p_id = ?';  // Replace with your actual condition to identify the record
         // const recordId = 1; // Replace with actual logic to identify the record (e.g. passed from frontend or session)
         db.query(updateQuery, [title, id], (err, results) => {
             if (err) throw err;
